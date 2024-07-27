@@ -5,8 +5,13 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname:
-          "https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/",
+        // hostname:
+        //   "https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/",
+
+        protocol: "https",
+        hostname: "1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com",
+        port: "",
+        pathname: "/dev/posts/**",
       },
     ],
   },

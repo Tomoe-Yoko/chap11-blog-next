@@ -1,10 +1,15 @@
 "use client";
+
 import React, { useState, FormEvent, ChangeEvent } from "react";
 
 interface Errors {
-  name: string;
-  email: string;
-  message: string;
+  // name: string;
+  // email: string;
+  // message: string;
+  //デフォルトを空にしたので必須でなくす
+  name?: string;
+  email?: string;
+  message?: string;
 }
 
 const Contact: React.FC = () => {
@@ -22,9 +27,10 @@ const Contact: React.FC = () => {
 
   const validate = () => {
     const newErrors: Errors = {
-      name: "",
-      email: "",
-      message: "",
+      //初期値なにもなくす
+      // name: "",
+      // email: "",
+      // message: "",
     };
     //↑バリデーションとして生成されたエラーのオブジェクト
 
@@ -46,6 +52,7 @@ const Contact: React.FC = () => {
     } else if (message.length >= 500) {
       newErrors.message = "本文は500文字以内で入力してください";
     }
+    console.log(Object.keys(newErrors).length);
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

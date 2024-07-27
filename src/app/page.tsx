@@ -36,7 +36,7 @@ const Home = () => {
             key={post.id}
             className="w-2/4 my-12 mx-auto p-8 outline outline-1"
           >
-            <Link href="/post/id">
+            <Link href={`/post/${post.id}`}>
               {/* //URL */}
               <div className="flex justify-between items-center">
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>

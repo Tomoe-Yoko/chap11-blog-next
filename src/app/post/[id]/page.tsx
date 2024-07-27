@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Apiloading from "@/app/loading";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface PagePost {
   thumbnailUrl: string;
@@ -11,8 +11,9 @@ interface PagePost {
   categories: string[];
   content: string;
 }
-
+//params URLから取得する
 function Page({ params }: { params: { id: string } }) {
+  // const params = useParams();//useParamsを使うときはこの書き方
   // 表示したい記事のIDを指定
 
   const [post, setPost] = useState<PagePost | null>(null);
@@ -40,7 +41,13 @@ function Page({ params }: { params: { id: string } }) {
   }
   return (
     <div className="w-9/12 mx-auto my-10 max-w-screen-md">
-      <img src={post.thumbnailUrl} alt={post.title} />
+      <Image
+        src={post.thumbnailUrl}
+        alt={post.title}
+        width={800}
+        height={400}
+      />
+
       <div className="flex  justify-between mt-4">
         <p> {new Date(post.createdAt).toLocaleDateString()}</p>
 
