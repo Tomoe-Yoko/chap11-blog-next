@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Apiloading from "@/app/loading";
+import { useRouter } from "next/navigation";
 
 interface PagePost {
   thumbnailUrl: string;
