@@ -6,3 +6,4 @@ export interface Post {
   categories: string[];
   content: string;
 }
+//app/page.tsx,Post[Id]/page.tsx用
