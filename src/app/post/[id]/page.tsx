@@ -2,20 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import Apiloading from "@/app/loading";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Post } from "@/app/_types/Post";
 
-interface PagePost {
-  thumbnailUrl: string;
-  title: string;
-  createdAt: string;
-  categories: string[];
-  content: string;
-}
-
+//params URLから取得する
 function Page({ params }: { params: { id: string } }) {
+  // const params = useParams();//useParamsを使うときはこの書き方
   // 表示したい記事のIDを指定
 
-  const [post, setPost] = useState<PagePost | null>(null);
+  const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     const fetchPost = async (id: string): Promise<void> => {
@@ -40,7 +35,14 @@ function Page({ params }: { params: { id: string } }) {
   }
   return (
     <div className="w-9/12 mx-auto my-10 max-w-screen-md">
-      <img src={post.thumbnailUrl} alt={post.title} />
+      <Image
+        src={post.thumbnailUrl}
+        alt={post.title}
+        width={800}
+        height={400}
+        layout="responsive"
+      />
+
       <div className="flex  justify-between mt-4">
         <p> {new Date(post.createdAt).toLocaleDateString()}</p>
 

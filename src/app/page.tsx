@@ -1,14 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-
-interface Post {
-  id: number;
-  createdAt: string;
-  categories: string[];
-  title: string;
-  content: string;
-}
+import { Post } from "./_types/Post";
 
 const Home = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -36,7 +29,7 @@ const Home = () => {
             key={post.id}
             className="w-2/4 my-12 mx-auto p-8 outline outline-1"
           >
-            <Link href="/post/id">
+            <Link href={`/post/${post.id}`}>
               {/* //URL */}
               <div className="flex justify-between items-center">
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>
