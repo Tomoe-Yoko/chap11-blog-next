@@ -8,6 +8,7 @@ const nextConfig = {
         // hostname:
         //   "https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/",
         //APIのドメインでなく、画像URL（post.thumbnailUrl）のドメイン
+
         hostname: "placehold.jp",
       },
     ],

@@ -1,14 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-
-interface Post {
-  id: number;
-  createdAt: string;
-  categories: string[];
-  title: string;
-  content: string;
-}
+import { Post } from "./_types/Post";
 
 const Home = () => {
   const [posts, setPosts] = useState<Post[]>([]);
