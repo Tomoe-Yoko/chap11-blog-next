@@ -13,7 +13,8 @@ const Home = () => {
         "https://mgbl6hrtar.microcms.io/api/v1/posts",
         {
           headers: {
-            "X-MICROCMS-API-KEY": "2zRe1CVAx2XazzPhz6Cd7hurjfFcXC8Yxmyb",
+            "X-MICROCMS-API-KEY": process.env
+              .NEXT_PUBLIC_MICROCMS_API_KEY as string,
           },
         }
       );
