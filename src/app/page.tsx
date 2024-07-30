@@ -10,11 +10,17 @@ const Home = () => {
     // 非同期関数を定義
     const fetchData = async () => {
       const response = await fetch(
-        "https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts"
+        "https://mgbl6hrtar.microcms.io/api/v1/posts",
+        {
+          headers: {
+            "X-MICROCMS-API-KEY": "2zRe1CVAx2XazzPhz6Cd7hurjfFcXC8Yxmyb",
+          },
+        }
       );
-
-      const data = await response.json();
-      setPosts(data.posts);
+      // const data = await response.json();
+      // setPost(data.post);
+      const { contents } = await response.json();
+      setPosts(contents);
     };
 
     // 非同期関数を呼び出す
@@ -22,7 +28,7 @@ const Home = () => {
   }, []);
 
   return (
-    <main>
+    <main className="pt-14">
       <ul>
         {posts.map((post) => (
           <li
@@ -34,18 +40,19 @@ const Home = () => {
               <div className="flex justify-between items-center">
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>
                 <div className="flex justify-between items-center">
-                  {post.categories.map((category: string, index: number) => (
+                  {post.categories.map((category, index) => (
                     <div
                       key={index}
                       className="text-sm p-1 text-blue-700 border border-solid border-1 border-blue-700 rounded-md mx-1"
                     >
-                      {category}
+                      {category.name}
                     </div>
                   ))}
                 </div>
               </div>
-              <h2>{post.title}</h2>
-              <p>{renderContent(post.content)}</p>
+              <h2 className="font-bold">{post.title}</h2>
+              <div>{renderContent(post.content)}</div>
+              {/* <p>{post.content}</p> */}
             </Link>
           </li>
         ))}
@@ -53,9 +60,29 @@ const Home = () => {
     </main>
   );
 };
-
-const renderContent = (content: string): string => {
-  const homeContent = content.slice(0, 24);
-  return `${homeContent}…`;
-};
 export default Home;
+
+////renderContent関数
+//1. HTMLタグを削除してテキストのみを抽出する
+const stripPTags = (p: string): string => {
+  const tempP = document.createElement("p");
+  tempP.innerHTML = p;
+  return tempP.textContent || tempP.innerText || "";
+};
+// 2. 抽出したテキストを指定された長さにトリミング
+const truncateText = (text: string): string => {
+  if (text.length <= 24) {
+    return text;
+  }
+  return text.slice(0, 24) + "…";
+};
+//3. 最終的なレンダリング
+const renderContent = (content: string): string => {
+  // HTMLタグを削除してテキストを抽出
+  const cleanContent = stripPTags(content);
+
+  // 抽出したテキストをトリミング
+  const truncatedContent = truncateText(cleanContent);
+
+  return truncatedContent;
+};
