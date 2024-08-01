@@ -32,11 +32,12 @@ function Page({ params }: { params: { id: string } }) {
       const data: Post = await response.json();
       //★★★↑必ず型指定明記しておくと後が楽
       setPost(data);
+      // setLoading(false);
     };
 
     // fetchPost(params.id as string);
     fetchPost();
-  }, []);
+  }, [id]);
   // console.log(post);
   //三項演算子（？）よりも早期リターンを使う！
   console.log(post);
@@ -56,7 +57,7 @@ function Page({ params }: { params: { id: string } }) {
         alt={post.title}
         width={800}
         height={400}
-        layout="responsive"
+        // layout="responsive"
       />
 
       <div className="flex  justify-between mt-4">
