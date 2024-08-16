@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Apiloading from "@/app/loading";
 import Image from "next/image";
 import { Post } from "@/app/_types/Post";
+import { Category } from "@/app/_types/Category";
 
 //params URLから取得する
 function Page({ params }: { params: { id: string } }) {
@@ -19,15 +20,16 @@ function Page({ params }: { params: { id: string } }) {
       //   `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${params.id}`
       // );
 
-      const response = await fetch(
-        `https://mgbl6hrtar.microcms.io/api/v1/posts/${id}`,
-        {
-          headers: {
-            "X-MICROCMS-API-KEY": process.env
-              .NEXT_PUBLIC_MICROCMS_API_KEY as string,
-          },
-        }
-      );
+      // const response = await fetch(
+      //   `https://mgbl6hrtar.microcms.io/api/v1/posts/${id}`,
+      //   {
+      //     headers: {
+      //       "X-MICROCMS-API-KEY": process.env
+      //         .NEXT_PUBLIC_MICROCMS_API_KEY as string,
+      //     },
+      //   }
+      // );
+      const response = await fetch(`/api/admin/posts/${id}`);
 
       const data: Post = await response.json();
       //★★★↑必ず型指定明記しておくと後が楽
@@ -53,7 +55,7 @@ function Page({ params }: { params: { id: string } }) {
   return (
     <div className="w-9/12 mx-auto my-10 max-w-screen-md  pt-24">
       <Image
-        src={post.thumbnail.url}
+        src={post.thumbnailUrl}
         alt={post.title}
         width={800}
         height={400}
@@ -64,12 +66,12 @@ function Page({ params }: { params: { id: string } }) {
         <p> {new Date(post.createdAt).toLocaleDateString()}</p>
 
         <ul className="flex">
-          {post.categories.map((category, index) => (
+          {post.postCategories.map((categories, index) => (
             <li
               key={index}
               className="p-1 m-1 text-blue-700 border border-solid border-blue-700 rounded"
             >
-              {category.name}
+              {categories.category.name}
             </li>
           ))}
         </ul>

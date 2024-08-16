@@ -9,17 +9,7 @@ const Home = () => {
   useEffect(() => {
     // 非同期関数を定義
     const fetchData = async () => {
-      const response = await fetch(
-        "https://mgbl6hrtar.microcms.io/api/v1/posts",
-        {
-          headers: {
-            "X-MICROCMS-API-KEY": process.env
-              .NEXT_PUBLIC_MICROCMS_API_KEY as string,
-          },
-        }
-      );
-      // const data = await response.json();
-      // setPost(data.post);
+      const response = await fetch("/api/v1/posts");
       const { contents } = await response.json();
       setPosts(contents);
     };
@@ -41,19 +31,18 @@ const Home = () => {
               <div className="flex justify-between items-center">
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>
                 <div className="flex justify-between items-center">
-                  {post.categories.map((category, index) => (
+                  {post.postCategories.map((category, index) => (
                     <div
                       key={index}
                       className="text-sm p-1 text-blue-700 border border-solid border-1 border-blue-700 rounded-md mx-1"
                     >
-                      {category.name}
+                      {category.category.name}
                     </div>
                   ))}
                 </div>
               </div>
               <h2 className="font-bold">{post.title}</h2>
               <div>{renderContent(post.content)}</div>
-              {/* <p>{post.content}</p> */}
             </Link>
           </li>
         ))}

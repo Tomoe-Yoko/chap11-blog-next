@@ -28,6 +28,8 @@ export const GET = async (request: NextRequest) => {
         createdAt: "desc",
       },
     });
+
+    console.log(posts);
     //レスポンスを返す
     return NextResponse.json(
       { status: "OK", posts: posts },
