@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Post } from "@/app/_types/Post";
 
-const Page = () => {
+const PageAdminPosts = () => {
   const [posts, setPost] = useState<Post[]>([]);
 
   // useEffect(() => {
@@ -43,7 +43,7 @@ const Page = () => {
     </main>
   );
 };
-export default Page;
+export default PageAdminPosts;
 // useState: posts という状態を管理し、その初期値を空の配列に設定しています。Post[] は TypeScript の型注釈で、posts が Post 型の配列であることを示しています。
 
 // useEffect: コンポーネントが初めてレンダリングされた時に、/api/admin/posts から記事データを取得します。このデータを posts に保存し、ページ内で利用できるようにします。

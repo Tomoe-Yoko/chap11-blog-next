@@ -12,9 +12,11 @@ const CategoryId = () => {
   // ///input状態の更新
   useEffect(() => {
     const fetcher = async () => {
-      const res = await fetch(`api/admin/categories/${id}`);
+      const res = await fetch(`/api/admin/categories/${id}`);
       const { category } = await res.json();
-      setName(category.name);
+      console.log(category);
+
+      setName(category.data.name);
     };
     fetcher();
   }, [id]);
@@ -35,7 +37,7 @@ const CategoryId = () => {
   // ///削除ボタン
   const handleDeleteCategory = async () => {
     if (!confirm("カテゴリーを削除しますか？")) return;
-    await fetch(`api/admin/categories/${id}`, {
+    await fetch(`/api/admin/categories/${id}`, {
       method: "DELETE",
     });
     alert("カテゴリーを削除しました。");
@@ -45,18 +47,19 @@ const CategoryId = () => {
   return (
     <main className="w-4/5 mx-auto">
       <div>
-        <h1 className="font-bold text-xl p-4 my-4">カテゴリー作成</h1>
+        <h1 className="font-bold text-xl p-4 my-4">カテゴリー更新</h1>
       </div>
       <form onSubmit={handlePutSubmit} className="w-5/6 mx-auto">
         <label
-          htmlFor="title"
+          htmlFor="name"
           className="mt-4 block w-24 text-sm font-medium text-gray-700"
         >
           カテゴリー名
         </label>
         <input
           type="text"
-          id="title"
+          id="name"
+          // value={`${name}を編集`}
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="mt-4 block w-3/5 min-w-40 rounded-md border border-gray-200 p-3"

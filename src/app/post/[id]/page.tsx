@@ -29,7 +29,7 @@ function Page({ params }: { params: { id: string } }) {
       //     },
       //   }
       // );
-      const response = await fetch(`/api/admin/posts/${id}`);
+      const response = await fetch("/admin/posts");
 
       const data: Post = await response.json();
       //★★★↑必ず型指定明記しておくと後が楽
@@ -39,10 +39,10 @@ function Page({ params }: { params: { id: string } }) {
 
     // fetchPost(params.id as string);
     fetchPost();
+    console.log(fetchPost);
   }, [id]);
   // console.log(post);
   //三項演算子（？）よりも早期リターンを使う！
-  console.log(post);
 
   if (!post) {
     return (

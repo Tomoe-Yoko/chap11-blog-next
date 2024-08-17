@@ -13,7 +13,18 @@ const NewPost = () => {
     "https://placehold.jp/800x400.png"
   );
   const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const router = useRouter();
+
+  //カテゴリーを取得
+  useEffect(() => {
+    const fetcher = async () => {
+      const res = await fetch("/api/admin/categories");
+      const data: Category[] = await res.json();
+      setCategories(data);
+    };
+    fetcher();
+  });
 
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +34,12 @@ const NewPost = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       //JavaScriptのオブジェクトや配列を JSON 形式の文字列に変換する関数です。APIにデータを送るとき、通常は文字列として送信する必要があるため、JavaScriptのオブジェクトを JSON 形式の文字列に変換
-      body: JSON.stringify({ title, content, thumbnailUrl, categories }),
+      body: JSON.stringify({
+        title,
+        content,
+        thumbnailUrl,
+        categoryIds: selectedCategoryIds,
+      }),
     });
 
     // レスポンスから作成した記事のIDを取得
@@ -31,6 +47,17 @@ const NewPost = () => {
     // 作成した記事の詳細ページに遷移
     router.push(`/admin/posts/${id}`);
     alert("記事を作成しました。");
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const options = e.target.options;
+    const selectedIds = [];
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].selected) {
+        selectedIds.push(Number(options[i].value));
+      }
+    }
+    setSelectedCategoryIds(selectedIds);
   };
 
   return (
@@ -83,22 +110,29 @@ const NewPost = () => {
             className="mt-1 block min-w-40 w-full rounded-md border border-gray-200 p-3"
           />
         </div>
-        {/* <div className="w-full">
+        <div className="w-full">
           <label
             htmlFor="categories"
             className="mt-4 block w-24 text-sm font-medium text-gray-700"
           >
             カテゴリー
-          </label> */}
-        {/* ・・・・・・・・・・・・・カテゴリーのコードわからん */}
-        {/* <select
-            type="select"
+          </label>
+          {/* ・・・・・・・・・・・・・カテゴリーのコードわからん */}
+          {/* カテゴリーの選択部分を追加し、複数選択できるように`multiple`属性を設定。
+   - handleCategoryChange関数を使って選択されたカテゴリーのIDを管理 */}
+          <select
             id="categories"
-            // value={categories}
-            onChange={(e) => setThumbnailUrl(e.target.value)}
+            multiple
+            onChange={handleCategoryChange}
             className="mt-4 block min-w-40 w-full h-20 rounded-md border border-gray-200 p-3"
-          />
-        </div> */}
+          >
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* //button */}
         <button
