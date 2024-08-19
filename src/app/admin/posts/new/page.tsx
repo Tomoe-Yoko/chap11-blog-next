@@ -30,7 +30,7 @@ const NewPost = () => {
     e.preventDefault();
 
     //投稿新規作成
-    const res = await fetch("/api/admin/post", {
+    const res = await fetch("/api/admin/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       //JavaScriptのオブジェクトや配列を JSON 形式の文字列に変換する関数です。APIにデータを送るとき、通常は文字列として送信する必要があるため、JavaScriptのオブジェクトを JSON 形式の文字列に変換
@@ -38,7 +38,7 @@ const NewPost = () => {
         title,
         content,
         thumbnailUrl,
-        categoryIds: selectedCategories,
+        categories: selectedCategories,
       }),
     });
 
