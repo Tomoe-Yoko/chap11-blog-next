@@ -13,18 +13,18 @@ const NewPost = () => {
     "https://placehold.jp/800x400.png"
   );
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const router = useRouter();
 
   //カテゴリーを取得
   useEffect(() => {
     const fetcher = async () => {
       const res = await fetch("/api/admin/categories");
-      const data: Category[] = await res.json();
-      setCategories(data);
+      const { categories }: { categories: Category[] } = await res.json();
+      setCategories(categories);
     };
     fetcher();
-  });
+  }, []);
 
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +38,7 @@ const NewPost = () => {
         title,
         content,
         thumbnailUrl,
-        categoryIds: selectedCategoryIds,
+        categoryIds: selectedCategories,
       }),
     });
 
@@ -49,15 +49,17 @@ const NewPost = () => {
     alert("記事を作成しました。");
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const options = e.target.options;
-    const selectedIds = [];
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        selectedIds.push(Number(options[i].value));
-      }
+  // const handleSelectCategory = (category: Category) => {
+  //   setSelectedCategories([...selectedCategories, category]);
+  // };
+  const handleSelectCategory = (category: Category) => {
+    if (selectedCategories.map((c) => c.id).includes(category.id)) {
+      setSelectedCategories(
+        selectedCategories.filter((c) => c.id !== category.id)
+      );
+    } else {
+      setSelectedCategories([...selectedCategories, category]);
     }
-    setSelectedCategoryIds(selectedIds);
   };
 
   return (
@@ -118,20 +120,22 @@ const NewPost = () => {
             カテゴリー
           </label>
           {/* ・・・・・・・・・・・・・カテゴリーのコードわからん */}
-          {/* カテゴリーの選択部分を追加し、複数選択できるように`multiple`属性を設定。
-   - handleCategoryChange関数を使って選択されたカテゴリーのIDを管理 */}
-          <select
-            id="categories"
-            multiple
-            onChange={handleCategoryChange}
-            className="mt-4 block min-w-40 w-full h-20 rounded-md border border-gray-200 p-3"
-          >
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+          <div>
+            {categories.map((category) => {
+              const isSelected = selectedCategories.includes(category);
+              return (
+                <div
+                  key={category.id}
+                  onClick={() => handleSelectCategory(category)}
+                  className={`${
+                    isSelected ? "bg-blue-500" : ""
+                  } border border-blue-500 w-fit p-1 rounded-md text-sm`}
+                >
+                  {category.name}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* //button */}

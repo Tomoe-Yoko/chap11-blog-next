@@ -12,6 +12,7 @@ const PostPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const { id } = useParams();
   const router = useRouter();
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,17 +37,48 @@ const PostPage = () => {
     router.push("/admin/posts");
   };
 
+  //記事を取得
   useEffect(() => {
     const fetcher = async () => {
-      const res = await fetch(`admin/posts/${id}`);
-      const { title, content, thumbnailUrl, postCategories } = await res.json();
-      setTitle(title);
-      setContent(content);
-      setThumbnailUrl(thumbnailUrl);
-      // setCategories(postCategories.map((pc) => pc.category));
+      const res = await fetch(`/api/admin/posts/${id}`);
+      // const data = await res.json();
+      // console.log(data);
+
+      const { post } = await res.json();
+      setTitle(post.title);
+      setContent(post.content);
+      setThumbnailUrl(post.thumbnailUrl);
+      // これは何をしていたか？
+      setSelectedCategories(post.postCategories.map((pc: Category) => pc.name));
     };
     fetcher();
-  }, [id]);
+  }, [id, title]);
+
+  //カテゴリーを取得
+  //  useEffect(()=>{});
+  useEffect(() => {
+    const fetcher = async () => {
+      const res = await fetch("/api/admin/categories");
+      const { categories }: { categories: Category[] } = await res.json();
+      setCategories(categories);
+    };
+    fetcher();
+  }, []);
+
+  // const handleSelectCategory = (category: Category) => {
+  //   setSelectedCategories([...selectedCategories, category]);
+  // };
+  // console.log(selectedCategories);
+
+  const handleSelectCategory = (category: Category) => {
+    if (selectedCategories.map((c) => c.id).includes(category.id)) {
+      setSelectedCategories(
+        selectedCategories.filter((c) => c.id !== category.id)
+      );
+    } else {
+      setSelectedCategories([...selectedCategories, category]);
+    }
+  };
 
   return (
     <main className="w-4/5 mx-auto">
@@ -54,64 +86,79 @@ const PostPage = () => {
         <h1 className="font-bold text-xl p-4 my-4">記事更新</h1>
       </div>
       <form onSubmit={handlePostSubmit} className="w-5/6 mx-auto">
-        <label
-          htmlFor="title"
-          className="mt-4 block w-24 text-sm font-medium text-gray-700"
-        >
-          タイトル名
-        </label>
-        <input
-          type="text"
-          id="title"
-          // value={`${name}を編集`}
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"
-        />
-        <label
-          htmlFor="content"
-          className="mt-4 block w-24 text-sm font-medium text-gray-700"
-        >
-          内容
-        </label>
-        <textarea
-          id="content"
-          // value={`${name}を編集`}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="mt-4 block w-5/6 min-w-40 h-22 rounded-md border border-gray-200 p-3"
-        />
-        <label
-          htmlFor="thumbnailUrl"
-          className="mt-4 block w-32 text-sm font-medium text-gray-700"
-        >
-          サムネイルURL
-        </label>
-        <input
-          type="text"
-          id="thumbnailUrl"
-          value={thumbnailUrl}
-          onChange={(e) => setThumbnailUrl(e.target.value)}
-          className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"
-        />
+        <div>
+          <label
+            htmlFor="title"
+            className="mt-4 block w-24 text-sm font-medium text-gray-700"
+          >
+            タイトル名
+          </label>
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="content"
+            className="mt-4 block w-24 text-sm font-medium text-gray-700"
+          >
+            内容
+          </label>
+          <textarea
+            id="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="mt-4 block w-5/6 min-w-40 h-22 rounded-md border border-gray-200 p-3"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="thumbnailUrl"
+            className="mt-4 block w-32 text-sm font-medium text-gray-700"
+          >
+            サムネイルURL
+          </label>
+          <input
+            type="text"
+            id="thumbnailUrl"
+            value={thumbnailUrl}
+            onChange={(e) => setThumbnailUrl(e.target.value)}
+            className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"
+          />
+        </div>
 
         {/* //カテゴリー */}
-        {/* <label
-          htmlFor="categories"
-          className="mt-4 block w-24 text-sm font-medium text-gray-700"
-        >
-          タイトル名
-        </label>
-        <input
-          type="text"
-          id="categories"
-          // value={`${name}を編集`}
-          value={categories}
-          onChange={(e) => setCategories(e.target.value)}
-          className="mt-4 block w-3/5 min-w-40 rounded-md border border-gray-200 p-3"
-        /> */}
+        <div>
+          <label
+            htmlFor="categories"
+            className="mt-4 block w-24 text-sm font-medium text-gray-700"
+          >
+            カテゴリー
+          </label>
+          {categories.map((category) => {
+            const isSelected = selectedCategories
+              //selectedCategories配列の中の一つのid
+              .map((c) => c.id)
+              //さらにcategory.idが含まれているもの
+              .includes(category.id);
+            return (
+              <div
+                key={category.id}
+                onClick={() => handleSelectCategory(category)}
+                className={`${
+                  isSelected ? "bg-blue-500" : ""
+                } border border-blue-500 w-fit p-1 rounded-md text-sm`}
+              >
+                {category.name}
+              </div>
+            );
+          })}
+        </div>
         <button
-          // onClick={handlePutSubmit}
           type="submit"
           className="mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >

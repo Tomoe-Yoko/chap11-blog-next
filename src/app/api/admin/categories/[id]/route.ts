@@ -16,7 +16,10 @@ export const GET = async (
         id: parseInt(id),
       },
     });
-    return NextResponse.json({ status: "OK" }, { status: 200 });
+    return NextResponse.json(
+      { status: "OK", category: category },
+      { status: 200 }
+    );
   } catch (error) {
     if (error instanceof Error)
       return NextResponse.json({ status: error.message }, { status: 400 });

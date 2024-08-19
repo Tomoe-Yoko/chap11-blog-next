@@ -16,7 +16,7 @@ const CategoryId = () => {
       const { category } = await res.json();
       console.log(category);
 
-      setName(category.data.name);
+      setName(category.name);
     };
     fetcher();
   }, [id]);
@@ -59,14 +59,13 @@ const CategoryId = () => {
         <input
           type="text"
           id="name"
-          // value={`${name}を編集`}
-          value={name}
+          // value={name}
+          placeholder={name}
           onChange={(e) => setName(e.target.value)}
-          className="mt-4 block w-3/5 min-w-40 rounded-md border border-gray-200 p-3"
+          className="mt-4 block w-3/5 min-w-40 rounded-md border border-gray-200 p-3 "
         />
 
         <button
-          // onClick={handlePutSubmit}
           type="submit"
           className="mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
