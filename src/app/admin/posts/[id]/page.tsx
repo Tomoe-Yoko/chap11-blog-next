@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Category } from "@/app/_types/Category";
-import { Post } from "@/app/_types/Post";
-import Categories from "../../categories/page";
+import PostForm from "../_components/PostForm";
 
 const PostPage = () => {
   const [title, setTitle] = useState("");
@@ -21,7 +20,12 @@ const PostPage = () => {
     await fetch(`/api/admin/posts/${id}`, {
       method: "PUT",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ title, content, thumbnailUrl, categories }),
+      body: JSON.stringify({
+        title,
+        content,
+        thumbnailUrl,
+        categories: selectedCategories,
+      }),
     });
     alert("記事を更新しました。");
     router.push("/admin/posts");
@@ -48,11 +52,24 @@ const PostPage = () => {
       setTitle(post.title);
       setContent(post.content);
       setThumbnailUrl(post.thumbnailUrl);
-      // これは何をしていたか？
-      setSelectedCategories(post.postCategories.map((pc: Category) => pc.name));
+
+      // カテゴリーの状態を更新↓
+      const postCategories = post.postCategories;
+      // 中間テーブルをはさんでいる。console.logで何がはいっているか確認し、設定
+      // ・・post.postCategoriesの中のカテゴリーオブジェクトを取ってきている。
+
+      console.log(post);
+      console.log(postCategories);
+      const categories: Category[] = postCategories.map(
+        (pc: { category: Category }) => pc.category
+      );
+      setSelectedCategories(categories);
+
+      //   setSelectedCategories(post.postCategories.map((pc: Category) => pc
+      // ));
     };
     fetcher();
-  }, [id, title]);
+  }, [id]);
 
   //カテゴリーを取得
   //  useEffect(()=>{});
@@ -79,99 +96,30 @@ const PostPage = () => {
       setSelectedCategories([...selectedCategories, category]);
     }
   };
+  console.log(handleSelectCategory);
 
   return (
     <main className="w-4/5 mx-auto">
       <div>
         <h1 className="font-bold text-xl p-4 my-4">記事更新</h1>
       </div>
-      <form onSubmit={handlePostSubmit} className="w-5/6 mx-auto">
-        <div>
-          <label
-            htmlFor="title"
-            className="mt-4 block w-24 text-sm font-medium text-gray-700"
-          >
-            タイトル名
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="content"
-            className="mt-4 block w-24 text-sm font-medium text-gray-700"
-          >
-            内容
-          </label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="mt-4 block w-5/6 min-w-40 h-22 rounded-md border border-gray-200 p-3"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="thumbnailUrl"
-            className="mt-4 block w-32 text-sm font-medium text-gray-700"
-          >
-            サムネイルURL
-          </label>
-          <input
-            type="text"
-            id="thumbnailUrl"
-            value={thumbnailUrl}
-            onChange={(e) => setThumbnailUrl(e.target.value)}
-            className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"
-          />
-        </div>
 
-        {/* //カテゴリー */}
-        <div>
-          <label
-            htmlFor="categories"
-            className="mt-4 block w-24 text-sm font-medium text-gray-700"
-          >
-            カテゴリー
-          </label>
-          {categories.map((category) => {
-            const isSelected = selectedCategories
-              //selectedCategories配列の中の一つのid
-              .map((c) => c.id)
-              //さらにcategory.idが含まれているもの
-              .includes(category.id);
-            return (
-              <div
-                key={category.id}
-                onClick={() => handleSelectCategory(category)}
-                className={`${
-                  isSelected ? "bg-blue-500" : ""
-                } border border-blue-500 w-fit p-1 rounded-md text-sm`}
-              >
-                {category.name}
-              </div>
-            );
-          })}
-        </div>
-        <button
-          type="submit"
-          className="mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          更新
-        </button>
-        <button
-          onClick={handleDeletePost}
-          type="button"
-          className="mt-4 ml-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-        >
-          削除
-        </button>
-      </form>
+      <PostForm
+        title={title} // タイトルの状態
+        setTitle={setTitle} // タイトルを更新する関数
+        content={content} // 内容の状態
+        setContent={setContent} // 内容を更新する関数
+        thumbnailUrl={thumbnailUrl} // サムネイルURLの状態
+        setThumbnailUrl={setThumbnailUrl} // サムネイルURLを更新する関数
+        categories={categories} // カテゴリーのリスト
+        selectedCategories={selectedCategories} // 選択されたカテゴリーのリスト
+        handleSelectCategory={handleSelectCategory} // カテゴリーを選択/解除する処理
+        handlePostSubmit={handlePostSubmit} // フォーム送信時の処理
+        handleDeletePost={handleDeletePost} // 記事削除の処理
+        mode="edit"
+      />
+      {/*  PostPage で定義された状態や関数を PostForm にプロパティとして渡すことで、PostForm コンポーネント内でこれらの状態や関数を使用できる。
+ このようにすることで、PostForm コンポーネント内でユーザーが入力した内容がリアルタイムで親コンポーネントの状態に反映され、フォームの送信や記事の削除が正常に動作する */}
     </main>
   );
 };

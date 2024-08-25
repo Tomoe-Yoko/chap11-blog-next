@@ -22,6 +22,7 @@ export interface Post {
   content: string;
   createdAt: string;
   postCategories: { category: Category }[];
+  // categories: Category[];
   thumbnailUrl: string;
 }
 

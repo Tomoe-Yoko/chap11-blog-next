@@ -9,9 +9,9 @@ const Home = () => {
   useEffect(() => {
     // 非同期関数を定義
     const fetchData = async () => {
-      const response = await fetch("/api/v1/posts");
-      const { contents } = await response.json();
-      setPosts(contents);
+      const response = await fetch("/api/posts");
+      const { posts } = await response.json();
+      setPosts(posts);
     };
 
     // 非同期関数を呼び出す

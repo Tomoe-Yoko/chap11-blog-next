@@ -15,29 +15,14 @@ function Page({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const fetchPost = async () => {
-      //const fetchPost = async (id: string): Promise<void> => {
-      // const response = await fetch(
-      //   `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${params.id}`
-      // );
-
-      // const response = await fetch(
-      //   `https://mgbl6hrtar.microcms.io/api/v1/posts/${id}`,
-      //   {
-      //     headers: {
-      //       "X-MICROCMS-API-KEY": process.env
-      //         .NEXT_PUBLIC_MICROCMS_API_KEY as string,
-      //     },
-      //   }
-      // );
-      const response = await fetch("/admin/posts");
-
-      const data: Post = await response.json();
+      const res = await fetch("/api/posts");
+      const data = await res.json();
       //★★★↑必ず型指定明記しておくと後が楽
       setPost(data);
       // setLoading(false);
+      console.log(data.postCategories);
     };
 
-    // fetchPost(params.id as string);
     fetchPost();
     console.log(fetchPost);
   }, [id]);
@@ -51,6 +36,10 @@ function Page({ params }: { params: { id: string } }) {
       </div>
     );
   }
+
+  // Object.keys(obj).map((key) => {
+  //   console.log(key, obj[key]); // keyにはa,b,cが入り、それに対応する値が取得できる
+  // });
 
   return (
     <div className="w-9/12 mx-auto my-10 max-w-screen-md  pt-24">

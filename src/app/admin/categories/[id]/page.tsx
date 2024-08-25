@@ -59,8 +59,8 @@ const CategoryId = () => {
         <input
           type="text"
           id="name"
-          // value={name}
-          placeholder={name}
+          value={name}
+          // placeholder={name}
           onChange={(e) => setName(e.target.value)}
           className="mt-4 block w-3/5 min-w-40 rounded-md border border-gray-200 p-3 "
         />
