@@ -1,5 +1,21 @@
 import React from "react";
-import { PostFormProps } from "../_types/PostFormProps";
+import { Category } from "@/app/_types/Category";
+//import { PostFormProps } from "../_types/PostFormProps";
+
+interface PostFormProps {
+  title: string;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  content: string;
+  setContent: React.Dispatch<React.SetStateAction<string>>;
+  thumbnailUrl: string;
+  setThumbnailUrl: React.Dispatch<React.SetStateAction<string>>;
+  categories: Category[]; //記事に関連付けられる可能性があるカテゴリのリスト（配列）
+  selectedCategories: Category[]; //記事に現在選択されているカテゴリのリスト（配列）
+  handleSelectCategory: (category: Category) => void;
+  handlePostSubmit: (e: React.FormEvent) => void;
+  handleDeletePost?: () => void;
+  mode: "new" | "edit";
+}
 
 const PostForm: React.FC<PostFormProps> = ({
   title,

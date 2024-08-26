@@ -15,12 +15,12 @@ function Page({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const res = await fetch("/api/posts");
+      const res = await fetch(`/api/posts/${id}`);
       const data = await res.json();
       //★★★↑必ず型指定明記しておくと後が楽
-      setPost(data);
+      setPost(data.post);
       // setLoading(false);
-      console.log(data.postCategories);
+      console.log(data.post);
     };
 
     fetchPost();
