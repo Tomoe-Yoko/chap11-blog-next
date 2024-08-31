@@ -19,34 +19,6 @@ interface PostFormProps {
   mode: "new" | "edit";
 }
 
-//handleImageChangeのロジック部分
-const [thumbnailUrlKey, setThumbnailUrlKey] = useState("");
-const handleImageChange = async (
-  event: ChangeEvent<HTMLInputElement>
-): Promise<void> => {
-  if (!event.target.files || event.target.files.length == 0) {
-    return; // 画像が選択されていないのでreturn
-  }
-  const file = event.target.files[0]; // 選択された画像を取得
-  const filePath = `private/${uuidv4()}`; // ファイルパスを指定,uuidライブラリインストール
-  // Supabaseに画像をアップロード
-  const { data, error } = await supabase.storage
-    .from("post_thumbnail") //ここでバケット名を使用
-    //upload:指定したバケットにファイルをアップロードするためのメソッド
-    .upload(filePath, file, {
-      cacheControl: "3600", //キャッシュ制御の設定です。3600秒（1時間）キャッシュされるように指定
-      upsert: false, //ファイルが既に存在する場合に上書きするかどうかを指定します。`false`に設定すると、既存のファイルがある場合は上書きせずにエラーを返す。
-    });
-
-  // アップロードに失敗したらエラーを表示して終了
-  if (error) {
-    alert(error.message);
-    return;
-  }
-  // data.pathに、画像固有のkeyが入っているので、thumbnailImageKeyに格納する
-  setThumbnailUrlKey(data.path);
-};
-
 const PostForm: React.FC<PostFormProps> = ({
   title,
   setTitle,
@@ -61,6 +33,33 @@ const PostForm: React.FC<PostFormProps> = ({
   handleDeletePost,
   mode,
 }) => {
+  //handleImageChangeのロジック部分
+  const [thumbnailUrlKey, setThumbnailUrlKey] = useState("");
+  const handleImageChange = async (
+    event: ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
+    if (!event.target.files || event.target.files.length == 0) {
+      return; // 画像が選択されていないのでreturn
+    }
+    const file = event.target.files[0]; // 選択された画像を取得
+    const filePath = `private/${uuidv4()}`; // ファイルパスを指定,uuidライブラリインストール
+    // Supabaseに画像をアップロード
+    const { data, error } = await supabase.storage
+      .from("post_thumbnail") //ここでバケット名を使用
+      //upload:指定したバケットにファイルをアップロードするためのメソッド
+      .upload(filePath, file, {
+        cacheControl: "3600", //キャッシュ制御の設定です。3600秒（1時間）キャッシュされるように指定
+        upsert: false, //ファイルが既に存在する場合に上書きするかどうかを指定します。`false`に設定すると、既存のファイルがある場合は上書きせずにエラーを返す。
+      });
+
+    // アップロードに失敗したらエラーを表示して終了
+    if (error) {
+      alert(error.message);
+      return;
+    }
+    // data.pathに、画像固有のkeyが入っているので、thumbnailImageKeyに格納する
+    setThumbnailUrlKey(data.path);
+  };
   return (
     <div>
       <form onSubmit={handlePostSubmit} className="w-5/6 mx-auto">
