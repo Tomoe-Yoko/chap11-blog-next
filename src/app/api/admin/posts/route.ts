@@ -1,10 +1,18 @@
 ///////GET
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { supabase } from "@/utils/supabase";
 
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
+  // ??  左側の値が`null`または`undefined`の場合に右側の''(空文字)を返します。
+  const token = request.headers.get("Auhorization") ?? "";
+  //supabaseにtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+  if (error)
+    return NextResponse.json({ status: error.message }, { status: 400 });
+  //tokenが正しい場合try以降が実行される
   try {
     const posts = await prisma.post.findMany({
       include: {

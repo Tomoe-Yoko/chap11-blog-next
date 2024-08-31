@@ -4,21 +4,31 @@ import React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Post } from "@/app/_types/Post";
+import { useSupabaseSession } from "@/app/hooks/useSupabaseSession";
 
 const PageAdminPosts = () => {
   const [posts, setPost] = useState<Post[]>([]);
+  const { token } = useSupabaseSession();
 
   // useEffect(() => {
-  //   const fetcher = () => {};
+  //   const fetcher = async() => {
+  //const res =await fetch() };
   // });
+  //fetchメソッド→第一引数はApiUrl、第二引数はオプションを設定でき、オプションの1つにheadersがある。そのheaders内に、Authorizationというキー名で、tokenを持たせる
   useEffect(() => {
+    if (!token) return;
     const fetcher = async () => {
-      const res = await fetch("/api/admin/posts");
+      const res = await fetch("/api/admin/posts", {
+        headers: {
+          "Content-Type": "application/json", //Header に token を付与
+          Authorization: token,
+        },
+      });
       const { posts } = await res.json();
       setPost(posts);
     };
     fetcher();
-  }, []);
+  }, [token]);
 
   return (
     <main className="w-5/6 mx-auto">

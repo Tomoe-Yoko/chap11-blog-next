@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Category } from "@/app/_types/Category";
 import PostForm from "../_components/PostForm";
+import { useSupabaseSession } from "@/app/hooks/useSupabaseSession";
 
 const PostPage = () => {
   const [title, setTitle] = useState("");
@@ -13,13 +14,15 @@ const PostPage = () => {
   const router = useRouter();
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
+  const { token } = useSupabaseSession(); //token追加
+
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!token) return;
     //記事更新
     await fetch(`/api/admin/posts/${id}`, {
       method: "PUT",
-      headers: { "Content-type": "application/json" },
+      headers: { "Content-type": "application/json", Authorization: token },
       body: JSON.stringify({
         title,
         content,
@@ -34,8 +37,10 @@ const PostPage = () => {
   //記事削除
   const handleDeletePost = async () => {
     if (!confirm("記事を削除しますか？")) return;
+    if (!token) return;
     await fetch(`/api/admin/posts/${id}`, {
       method: "DELETE",
+      headers: { "Content-Type": "application/json", Authorization: token },
     });
     alert("記事を削除しました。");
     router.push("/admin/posts");
@@ -43,8 +48,14 @@ const PostPage = () => {
 
   //記事を取得
   useEffect(() => {
+    if (!token) return;
     const fetcher = async () => {
-      const res = await fetch(`/api/admin/posts/${id}`);
+      const res = await fetch(`/api/admin/posts/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
       // const data = await res.json();
       // console.log(data);
 
@@ -69,18 +80,24 @@ const PostPage = () => {
       // ));
     };
     fetcher();
-  }, [id]);
+  }, [id, token]);
 
   //カテゴリーを取得
   //  useEffect(()=>{});
   useEffect(() => {
+    if (!token) return;
     const fetcher = async () => {
-      const res = await fetch("/api/admin/categories");
+      const res = await fetch("/api/admin/categories", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
       const { categories }: { categories: Category[] } = await res.json();
       setCategories(categories);
     };
     fetcher();
-  }, []);
+  }, [token]);
 
   // const handleSelectCategory = (category: Category) => {
   //   setSelectedCategories([...selectedCategories, category]);

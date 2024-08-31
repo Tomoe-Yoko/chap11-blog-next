@@ -4,24 +4,27 @@ import React from "react";
 import { useState } from "react";
 import { Post } from "@/app/_types/Post";
 import { useRouter } from "next/navigation";
+import { useSupabaseSession } from "@/app/hooks/useSupabaseSession";
 
 const NewCategory = () => {
+  const { token } = useSupabaseSession();
   const [name, setName] = useState("");
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!token) return;
     //categoryを作成
     const res = await fetch("/api/admin/categories", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: token,
       },
       body: JSON.stringify({ name }),
     });
     const { id } = await res.json();
 
-    router.push(`/admin/categories/${id}`);
+    router.push(`/admin/categories`);
     alert("カテゴリーを作成しました。");
     console.log("カテゴリー作成しました");
   };

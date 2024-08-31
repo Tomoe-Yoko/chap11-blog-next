@@ -6,8 +6,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Category } from "@/app/_types/Category";
 import PostForm from "../_components/PostForm";
+import { useSupabaseSession } from "@/app/hooks/useSupabaseSession";
 
 const NewPost = () => {
+  const { token } = useSupabaseSession();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState(
@@ -19,21 +21,24 @@ const NewPost = () => {
 
   //カテゴリーを取得
   useEffect(() => {
+    if (!token) return;
     const fetcher = async () => {
-      const res = await fetch("/api/admin/categories");
+      const res = await fetch("/api/admin/categories", {
+        headers: { "Content-Type": "applicaation/json", Authorization: token },
+      });
       const { categories }: { categories: Category[] } = await res.json();
       setCategories(categories);
     };
     fetcher();
-  }, []);
+  }, [token]);
 
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!token) return;
     //投稿新規作成
     const res = await fetch("/api/admin/posts", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: token },
       //JavaScriptのオブジェクトや配列を JSON 形式の文字列に変換する関数です。APIにデータを送るとき、通常は文字列として送信する必要があるため、JavaScriptのオブジェクトを JSON 形式の文字列に変換
       body: JSON.stringify({
         title,

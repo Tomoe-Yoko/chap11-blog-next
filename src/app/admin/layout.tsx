@@ -1,24 +1,27 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 
 // import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import { Header } from "@/app/component/Header";
+import useRouteGuard from "./hooks/useRouteGuard";
+import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
-
-// export const metadata: Metadata = {
-//   title: "管理者画面",
-//   description: "Next.jsの練習の管理者画面",
-// };
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
+  useRouteGuard();
+  const pathname = usePathname();
+  const isSelected = (href: string) => {
+    return pathname.includes(href);
+  };
+
   return (
     <html lang="ja">
       <body className={inter.className}>
@@ -53,3 +56,4 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     </html>
   );
 }
+//useRouteGuardで管理者画面へのアクセス制限の実装
