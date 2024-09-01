@@ -12,9 +12,7 @@ const NewPost = () => {
   const { token } = useSupabaseSession();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState(
-    "https://placehold.jp/800x400.png"
-  );
+  const [thumbnailImageKey, setThumbnailImageKey] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const router = useRouter();
@@ -43,7 +41,7 @@ const NewPost = () => {
       body: JSON.stringify({
         title,
         content,
-        thumbnailUrl,
+        thumbnailImageKey,
         categories: selectedCategories,
       }),
     });
@@ -82,8 +80,8 @@ const NewPost = () => {
         setTitle={setTitle}
         content={content}
         setContent={setContent}
-        thumbnailUrl={thumbnailUrl}
-        setThumbnailUrl={setThumbnailUrl}
+        thumbnailImageKey={thumbnailImageKey}
+        setThumbnailImageKey={setThumbnailImageKey}
         categories={categories}
         selectedCategories={selectedCategories}
         handleSelectCategory={handleSelectCategory}

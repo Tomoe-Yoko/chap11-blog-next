@@ -9,8 +9,8 @@ interface PostFormProps {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   content: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
-  thumbnailUrl: string;
-  setThumbnailUrl: React.Dispatch<React.SetStateAction<string>>;
+  thumbnailImageKey: string;
+  setThumbnailImageKey: React.Dispatch<React.SetStateAction<string>>;
   categories: Category[]; //記事に関連付けられる可能性があるカテゴリのリスト（配列）
   selectedCategories: Category[]; //記事に現在選択されているカテゴリのリスト（配列）
   handleSelectCategory: (category: Category) => void;
@@ -24,8 +24,7 @@ const PostForm: React.FC<PostFormProps> = ({
   setTitle,
   content,
   setContent,
-  thumbnailUrl,
-  setThumbnailUrl,
+
   categories,
   selectedCategories,
   handleSelectCategory,
@@ -34,7 +33,7 @@ const PostForm: React.FC<PostFormProps> = ({
   mode,
 }) => {
   //handleImageChangeのロジック部分
-  const [thumbnailUrlKey, setThumbnailUrlKey] = useState("");
+  const [thumbnailImageKey, setThumbnailImageKey] = useState("");
   const handleImageChange = async (
     event: ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -58,7 +57,9 @@ const PostForm: React.FC<PostFormProps> = ({
       return;
     }
     // data.pathに、画像固有のkeyが入っているので、thumbnailImageKeyに格納する
-    setThumbnailUrlKey(data.path);
+    setThumbnailImageKey(data.path);
+
+    //console.log(data.path);OK
   };
   return (
     <div>

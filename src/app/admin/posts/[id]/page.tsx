@@ -8,7 +8,7 @@ import { useSupabaseSession } from "@/app/hooks/useSupabaseSession";
 const PostPage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const [thumbnailImageKey, setThumbnailImageKey] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const { id } = useParams();
   const router = useRouter();
@@ -26,7 +26,7 @@ const PostPage = () => {
       body: JSON.stringify({
         title,
         content,
-        thumbnailUrl,
+        thumbnailImageKey,
         categories: selectedCategories,
       }),
     });
@@ -62,7 +62,7 @@ const PostPage = () => {
       const { post } = await res.json();
       setTitle(post.title);
       setContent(post.content);
-      setThumbnailUrl(post.thumbnailUrl);
+      setThumbnailImageKey(post.thumbnailImageKey);
 
       // カテゴリーの状態を更新↓
       const postCategories = post.postCategories;
@@ -126,8 +126,8 @@ const PostPage = () => {
         setTitle={setTitle} // タイトルを更新する関数
         content={content} // 内容の状態
         setContent={setContent} // 内容を更新する関数
-        thumbnailUrl={thumbnailUrl} // サムネイルURLの状態
-        setThumbnailUrl={setThumbnailUrl} // サムネイルURLを更新する関数
+        thumbnailImageKey={thumbnailImageKey} // サムネイルURLの状態
+        setThumbnailImageKey={setThumbnailImageKey} // サムネイルURLを更新する関数
         categories={categories} // カテゴリーのリスト
         selectedCategories={selectedCategories} // 選択されたカテゴリーのリスト
         handleSelectCategory={handleSelectCategory} // カテゴリーを選択/解除する処理

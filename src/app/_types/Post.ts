@@ -23,7 +23,7 @@ export interface Post {
   createdAt: string;
   postCategories: { category: Category }[];
   // categories: Category[];
-  thumbnailUrl: string;
+  thumbnailImageKey: string;
 }
 
 // export interface MicroCmsPost {

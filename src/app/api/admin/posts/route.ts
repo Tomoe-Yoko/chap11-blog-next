@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
   // ??  左側の値が`null`または`undefined`の場合に右側の''(空文字)を返します。
-  const token = request.headers.get("Auhorization") ?? "";
+  const token = request.headers.get("Authorization") ?? "";
   //supabaseにtokenを送る
   const { error } = await supabase.auth.getUser(token);
   if (error)
@@ -52,7 +52,7 @@ interface CreatePostRequestBody {
   title: string;
   content: string;
   categories: { id: number }[]; //IDをナンバーで指定したオブジェクトの配列
-  thumbnailUrl: string;
+  thumbnailImageKey: string;
 }
 
 //POSTと命名することでポストリクエスト時にこの関数が呼ばれる
@@ -62,14 +62,18 @@ export const POST = async (request: Request) => {
     //リクエストのbodyを取得
     const body = await request.json();
     //bodyの中から以下の４つを取り出す
-    const { title, content, categories, thumbnailUrl }: CreatePostRequestBody =
-      body;
+    const {
+      title,
+      content,
+      categories,
+      thumbnailImageKey,
+    }: CreatePostRequestBody = body;
     //投稿をDBに生成
     const data = await prisma.post.create({
       data: {
         title,
         content,
-        thumbnailUrl,
+        thumbnailImageKey,
       },
     });
     //postCategoryにも生成
