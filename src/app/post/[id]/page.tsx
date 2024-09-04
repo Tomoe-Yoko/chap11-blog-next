@@ -54,7 +54,7 @@ function Page({ params }: { params: { id: string } }) {
 
     fetcherImage();
     console.log(post);
-  }, [thumbnailImageKey]);
+  }, [post, thumbnailImageKey]);
   if (!post) {
     return (
       <div>
@@ -74,7 +74,7 @@ function Page({ params }: { params: { id: string } }) {
       {/* // 画像の表示 */}
       {thumbnailImageUrl && (
         <Image
-          src={post.thumbnailImageKey}
+          src={thumbnailImageUrl}
           alt={post.title}
           width={800}
           height={400}

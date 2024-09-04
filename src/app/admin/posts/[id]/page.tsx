@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Category } from "@/app/_types/Category";
 import PostForm from "../_components/PostForm";
 import { useSupabaseSession } from "@/app/hooks/useSupabaseSession";
+import { log } from "console";
 
 const PostPage = () => {
   const [title, setTitle] = useState("");
@@ -71,6 +72,7 @@ const PostPage = () => {
 
       console.log(post);
       console.log(postCategories);
+      console.log(post.thumbnailImageKey);
       const categories: Category[] = postCategories.map(
         (pc: { category: Category }) => pc.category
       );

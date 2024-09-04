@@ -1,8 +1,9 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Category } from "@/app/_types/Category";
 //import { PostFormProps } from "../_types/PostFormProps";
 import { supabase } from "@/utils/supabase";
 import { v4 as uuidv4 } from "uuid"; // 固有IDを生成するライブラリ
+import Image from "next/image";
 
 interface PostFormProps {
   title: string;
@@ -24,16 +25,22 @@ const PostForm: React.FC<PostFormProps> = ({
   setTitle,
   content,
   setContent,
-
   categories,
   selectedCategories,
   handleSelectCategory,
+  thumbnailImageKey,
+  setThumbnailImageKey,
   handlePostSubmit,
   handleDeletePost,
   mode,
 }) => {
   //handleImageChangeのロジック部分
-  const [thumbnailImageKey, setThumbnailImageKey] = useState("");
+
+  //////// Imageタグのsrcにセットする画像URLを持たせるstate
+  const [thumbnailImageUrl, setThumbnailImageUrl] = useState<null | string>(
+    null
+  );
+
   const handleImageChange = async (
     event: ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -43,6 +50,7 @@ const PostForm: React.FC<PostFormProps> = ({
     const file = event.target.files[0]; // 選択された画像を取得
     const filePath = `private/${uuidv4()}`; // ファイルパスを指定,uuidライブラリインストール
     // Supabaseに画像をアップロード
+
     const { data, error } = await supabase.storage
       .from("post_thumbnail") //ここでバケット名を使用
       //upload:指定したバケットにファイルをアップロードするためのメソッド
@@ -61,6 +69,21 @@ const PostForm: React.FC<PostFormProps> = ({
 
     //console.log(data.path);OK
   };
+  // アップロード時に取得した、thumbnailImageKeyを用いて画像のURLを取得
+  useEffect(() => {
+    const fetcherImage = async () => {
+      const {
+        data: { publicUrl },
+      } = await supabase.storage
+        .from("post_thumbnail")
+        .getPublicUrl(thumbnailImageKey);
+
+      setThumbnailImageUrl(publicUrl);
+    };
+    fetcherImage();
+  }, [thumbnailImageKey]);
+  // [thumbnailImageKey]依存配列内はthumbnailImageKeyに変更があったときにレンダリングする
+
   return (
     <div>
       <form onSubmit={handlePostSubmit} className="w-5/6 mx-auto">
@@ -109,6 +132,15 @@ const PostForm: React.FC<PostFormProps> = ({
             accept="image/*"
             className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"
           />
+
+          {mode === "edit" && thumbnailImageUrl && (
+            <Image
+              src={thumbnailImageUrl}
+              alt={title}
+              width={600}
+              height={300}
+            />
+          )}
         </div>
 
         {/* //カテゴリー */}
