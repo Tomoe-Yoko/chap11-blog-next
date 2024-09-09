@@ -40,23 +40,23 @@ const PostForm: React.FC<PostFormProps> = ({
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<null | string>(
     null
   );
-
+  //以下の関数はユーザーが選択した画像をクラウドストレージにアップロードし、そのパスを保存するためのものです。エラーが発生した場合はユーザーに通知し、成功した場合はパスを保存
   const handleImageChange = async (
     event: ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
     if (!event.target.files || event.target.files.length == 0) {
-      return; // 画像が選択されていないのでreturn
+      return; // 画像が選択されていない時はreturn
     }
     const file = event.target.files[0]; // 選択された画像を取得
-    const filePath = `private/${uuidv4()}`; // ファイルパスを指定,uuidライブラリインストール
-    // Supabaseに画像をアップロード
+    const filePath = `private/${uuidv4()}`; // ファイルパスをランダム文字で作成,（uuidライブラリインストール）
+    //アップロード先の住所みたいなの
 
-    const { data, error } = await supabase.storage
-      .from("post_thumbnail") //ここでバケット名を使用
+    const { data, error } = await supabase.storage // Supabaseに画像をアップロード
+      .from("post_thumbnail") //どのストレージバケットにファイルをアップロードするかを指定、ここでバケット名を使用
       //upload:指定したバケットにファイルをアップロードするためのメソッド
       .upload(filePath, file, {
         cacheControl: "3600", //キャッシュ制御の設定です。3600秒（1時間）キャッシュされるように指定
-        upsert: false, //ファイルが既に存在する場合に上書きするかどうかを指定します。`false`に設定すると、既存のファイルがある場合は上書きせずにエラーを返す。
+        upsert: false, //同じ名前のファイルが存在する場合に上書きするかどうか（ここでは上書きしない）。
       });
 
     // アップロードに失敗したらエラーを表示して終了
@@ -64,7 +64,7 @@ const PostForm: React.FC<PostFormProps> = ({
       alert(error.message);
       return;
     }
-    // data.pathに、画像固有のkeyが入っているので、thumbnailImageKeyに格納する
+    // data.path（アップロードされたファイルのパス）が、画像固有のkey、これをthumbnailImageKeyに格納する
     setThumbnailImageKey(data.path);
 
     //console.log(data.path);OK
@@ -77,6 +77,7 @@ const PostForm: React.FC<PostFormProps> = ({
       } = await supabase.storage
         .from("post_thumbnail")
         .getPublicUrl(thumbnailImageKey);
+      //supabaseの仕様なので、覚える
 
       setThumbnailImageUrl(publicUrl);
     };
@@ -126,8 +127,6 @@ const PostForm: React.FC<PostFormProps> = ({
           <input
             type="file"
             id="thumbnailUrl"
-            // value={thumbnailUrl}
-            //onChange={(e) => setThumbnailUrl(e.target.value)}
             onChange={handleImageChange}
             accept="image/*"
             className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"

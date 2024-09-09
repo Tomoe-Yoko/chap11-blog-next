@@ -20,7 +20,7 @@ const PostPage = () => {
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token) return;
-    //記事更新
+    //記事更新　画像をアップロードしてthumbnailImageKeyを保存する処理
     await fetch(`/api/admin/posts/${id}`, {
       method: "PUT",
       headers: { "Content-type": "application/json", Authorization: token },
@@ -47,7 +47,7 @@ const PostPage = () => {
     router.push("/admin/posts");
   };
 
-  //記事を取得
+  //記事更新：画像をアップロード及びthumbnailImageKeyを保存した後の記事取得
   useEffect(() => {
     if (!token) return;
     const fetcher = async () => {

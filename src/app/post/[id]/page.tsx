@@ -77,8 +77,9 @@ function Page({ params }: { params: { id: string } }) {
           src={thumbnailImageUrl}
           alt={post.title}
           width={800}
-          height={400}
+          height={500}
           // layout="responsive"
+          className="max-h-96 object-cover"
         />
       )}
 

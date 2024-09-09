@@ -26,10 +26,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     <html lang="ja">
       <body className={inter.className}>
         <Header />
-        <div className="flex pt-14">
+        <div className="md:flex md:pt-14">
           {/* //sidebar */}
-          <div className="bg-gray-200 w-64 h-screen pt-12">
-            <ul>
+          <div className="bg-gray-200 md:w-64 md:h-screen pt-12 pb-4">
+            <ul className="flex md:block">
               <li>
                 <Link
                   href="/admin/posts"
@@ -41,7 +41,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <li>
                 <Link
                   href="/admin/categories"
-                  className="font-bold w-ful block px-4 pt-4 mt-6 ml-4"
+                  className="font-bold w-full block px-4 pt-4 mt-4 md:mt-6 ml-4"
                 >
                   カテゴリー一覧
                 </Link>

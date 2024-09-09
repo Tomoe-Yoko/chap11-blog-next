@@ -24,7 +24,10 @@ const Page = () => {
 
   return (
     <div className="flex justify-center pt-[240px]">
-      <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-[400px]">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 w-full md:max-w-[400px] max-w-[300px]"
+      >
         <div>
           <label
             htmlFor="email"

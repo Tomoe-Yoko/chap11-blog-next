@@ -32,7 +32,10 @@ const PageAdminPosts = () => {
 
   return (
     <main className="w-5/6 mx-auto">
-      <div className="w-full my-4 flex items-center justify-between">
+      <div
+        className="w-full my-4 flex items-center justify-between pb-24 md:pb-8
+      "
+      >
         <h1 className="font-bold text-xl p-4">記事一覧</h1>
         <button className="mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <Link href={"/admin/posts/new"}>新規作成</Link>
