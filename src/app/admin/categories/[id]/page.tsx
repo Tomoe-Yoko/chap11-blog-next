@@ -19,7 +19,6 @@ const CategoryId = () => {
         headers: { "Content-Type": "application/json", Authorization: token },
       });
       const { category } = await res.json();
-      console.log(category);
 
       setName(category.name);
     };

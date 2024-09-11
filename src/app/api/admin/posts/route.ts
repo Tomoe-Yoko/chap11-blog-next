@@ -8,7 +8,6 @@ const prisma = new PrismaClient();
 export const GET = async (request: NextRequest) => {
   // ??  左側の値が`null`または`undefined`の場合に右側の''(空文字)を返します。
   const token = request.headers.get("Authorization") ?? "";
-  //supabaseにtokenを送る
   const { error } = await supabase.auth.getUser(token);
   if (error)
     return NextResponse.json({ status: error.message }, { status: 400 });

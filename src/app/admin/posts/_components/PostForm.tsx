@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Category } from "@/app/_types/Category";
-//import { PostFormProps } from "../_types/PostFormProps";
 import { supabase } from "@/utils/supabase";
 import { v4 as uuidv4 } from "uuid"; // 固有IDを生成するライブラリ
 import Image from "next/image";
@@ -40,6 +39,8 @@ const PostForm: React.FC<PostFormProps> = ({
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<null | string>(
     null
   );
+  console.log(thumbnailImageUrl);
+
   //以下の関数はユーザーが選択した画像をクラウドストレージにアップロードし、そのパスを保存するためのものです。エラーが発生した場合はユーザーに通知し、成功した場合はパスを保存
   const handleImageChange = async (
     event: ChangeEvent<HTMLInputElement>
@@ -66,8 +67,6 @@ const PostForm: React.FC<PostFormProps> = ({
     }
     // data.path（アップロードされたファイルのパス）が、画像固有のkey、これをthumbnailImageKeyに格納する
     setThumbnailImageKey(data.path);
-
-    //console.log(data.path);OK
   };
   // アップロード時に取得した、thumbnailImageKeyを用いて画像のURLを取得
   useEffect(() => {
@@ -132,7 +131,7 @@ const PostForm: React.FC<PostFormProps> = ({
             className="mt-4 block w-5/6 min-w-40 rounded-md border border-gray-200 p-3"
           />
 
-          {mode === "edit" && thumbnailImageUrl && (
+          {thumbnailImageUrl && (
             <Image
               src={thumbnailImageUrl}
               alt={title}
@@ -178,7 +177,7 @@ const PostForm: React.FC<PostFormProps> = ({
           {/* 更新 */}
           {mode === "new" ? "作成" : "更新"}
         </button>
-        {mode === "edit" && (
+        {mode === "edit" && thumbnailImageUrl && (
           <button
             onClick={handleDeletePost}
             type="button"

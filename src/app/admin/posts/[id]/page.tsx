@@ -69,10 +69,6 @@ const PostPage = () => {
       const postCategories = post.postCategories;
       // 中間テーブルをはさんでいる。console.logで何がはいっているか確認し、設定
       // ・・post.postCategoriesの中のカテゴリーオブジェクトを取ってきている。
-
-      console.log(post);
-      console.log(postCategories);
-      console.log(post.thumbnailImageKey);
       const categories: Category[] = postCategories.map(
         (pc: { category: Category }) => pc.category
       );
@@ -100,11 +96,6 @@ const PostPage = () => {
     };
     fetcher();
   }, [token]);
-
-  // const handleSelectCategory = (category: Category) => {
-  //   setSelectedCategories([...selectedCategories, category]);
-  // };
-  // console.log(selectedCategories);
 
   const handleSelectCategory = (category: Category) => {
     if (selectedCategories.map((c) => c.id).includes(category.id)) {

@@ -14,7 +14,7 @@ const NewCategory = () => {
     e.preventDefault();
     if (!token) return;
     //categoryを作成
-    const res = await fetch("/api/admin/categories", {
+    await fetch("/api/admin/categories", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,11 +22,9 @@ const NewCategory = () => {
       },
       body: JSON.stringify({ name }),
     });
-    const { id } = await res.json();
 
     router.push(`/admin/categories`);
     alert("カテゴリーを作成しました。");
-    console.log("カテゴリー作成しました");
   };
   return (
     <>
