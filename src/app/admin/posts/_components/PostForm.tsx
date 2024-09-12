@@ -70,6 +70,7 @@ const PostForm: React.FC<PostFormProps> = ({
   };
   // アップロード時に取得した、thumbnailImageKeyを用いて画像のURLを取得
   useEffect(() => {
+    if (!thumbnailImageKey) return;
     const fetcherImage = async () => {
       const {
         data: { publicUrl },
