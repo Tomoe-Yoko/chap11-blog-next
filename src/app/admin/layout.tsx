@@ -26,9 +26,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     <html lang="ja">
       <body className={inter.className}>
         <Header />
-        <div className="md:flex md:pt-14">
+        <div className="md:flex md:pt-14 md:items-stretch">
           {/* //sidebar */}
-          <div className="bg-gray-200 md:w-64 md:h-screen pt-12 pb-4">
+          <div className="md:fixed md:inset-0  bg-gray-200 md:w-64 pt-12 pb-4">
             <ul className="flex md:block">
               <li>
                 <Link
@@ -50,7 +50,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
 
           {/* //main_area */}
-          <div className="w-5/6 mx-auto">{children}</div>
+          <div className="w-5/6 md:ml-[20%] md:m-0 m-auto">{children}</div>
         </div>
       </body>
     </html>
