@@ -11,7 +11,7 @@ export const Header: React.FC = () => {
   };
   const { session, isLoading } = useSupabaseSession();
   return (
-    <header className="py-4 px-12 bg-gray-900 text-white flex justify-between items-center fixed top-0 left-0 w-full">
+    <header className="py-4 px-12 bg-gray-900 text-white flex justify-between items-center fixed top-0 left-0 z-10 w-full">
       <h1>
         <Link href="/">Blog</Link>
       </h1>

@@ -12,16 +12,24 @@ export const GET = async (request: NextRequest) => {
   const { error } = await supabase.auth.getUser(token);
   if (error)
     return NextResponse.json({ status: error.message }, { status: 400 });
-
   //tokenが正しい場合try以降が実行される
   try {
+    // ??  左側の値が`null`または`undefined`の場合に右側の''(空文字)を返します。
+    const token = request.headers.get("Authorization") ?? "";
+
+    //supabaseにtokenを送る
+    const { error } = await supabase.auth.getUser(token);
+
+    if (error)
+      return NextResponse.json({ status: error.message }, { status: 400 });
+    //tokenが正しい場合try以降が実行される
     const categories = await prisma.category.findMany({
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ status: "OK", categories }, { status: 200 });
   } catch (error) {
     if (error instanceof Error)
-      return NextResponse.json({ status: error.message }, { status: 400 });
+      return NextResponse.json({ status: error.message }, { status: 500 });
   }
 };
 

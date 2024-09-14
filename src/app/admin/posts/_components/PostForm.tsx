@@ -87,7 +87,7 @@ const PostForm: React.FC<PostFormProps> = ({
 
   return (
     <div>
-      <form onSubmit={handlePostSubmit} className="w-5/6 mx-auto">
+      <form onSubmit={handlePostSubmit} className="w-4/5">
         <div>
           <label
             htmlFor="title"

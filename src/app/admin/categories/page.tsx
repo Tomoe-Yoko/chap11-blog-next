@@ -13,7 +13,7 @@ const Categories = () => {
     if (!token) return;
     const fetcher = async () => {
       const res = await fetch("/api/admin/categories", {
-        headers: { "Content-Type": "applivation/json", Autorization: token },
+        headers: { "Content-Type": "application/json", Authorization: token },
       });
       const { categories } = await res.json();
       setCategories(categories);
