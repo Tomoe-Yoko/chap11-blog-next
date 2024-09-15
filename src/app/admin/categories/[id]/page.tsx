@@ -1,25 +1,29 @@
 "use client";
 
+import { useSupabaseSession } from "@/app/hooks/useSupabaseSession";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const CategoryId = () => {
+  const { token } = useSupabaseSession();
   const [name, setName] = useState("");
   const { id } = useParams();
   const router = useRouter();
 
   // ///input状態の更新
   useEffect(() => {
+    if (!token) return;
     const fetcher = async () => {
-      const res = await fetch(`/api/admin/categories/${id}`);
+      const res = await fetch(`/api/admin/categories/${id}`, {
+        headers: { "Content-Type": "application/json", Authorization: token },
+      });
       const { category } = await res.json();
-      console.log(category);
 
       setName(category.name);
     };
     fetcher();
-  }, [id]);
+  }, [id, token]);
 
   // ///カテゴリー更新ボタン
   const handlePutSubmit = async (e: React.FormEvent) => {

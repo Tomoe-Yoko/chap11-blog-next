@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#chap11にて データベースのURLを保存する.envを、github上に上げないようにした。こういった情報はインターネット上に公開しないことが重要。 .envを.gitignoreに追加して、gitの管理下から外した。
+plaintext
+.env

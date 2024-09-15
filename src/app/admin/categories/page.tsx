@@ -3,18 +3,23 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 //import { Post } from "@/app/_types/Post";
 import { Category } from "@/app/_types/Category";
+import { useSupabaseSession } from "@/app/hooks/useSupabaseSession";
 
 const Categories = () => {
+  const { token } = useSupabaseSession();
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
+    if (!token) return;
     const fetcher = async () => {
-      const res = await fetch("/api/admin/categories");
+      const res = await fetch("/api/admin/categories", {
+        headers: { "Content-Type": "application/json", Authorization: token },
+      });
       const { categories } = await res.json();
       setCategories(categories);
     };
     fetcher();
-  }, []);
+  }, [token]);
 
   return (
     <main className="w-5/6 mx-auto">
